@@ -1,0 +1,456 @@
+<title>Radar Business Autonome</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+:root{
+  --bg:#F5F7F6; --surface:#FFFFFF; --surface-2:#EDF1F0;
+  --ink:#16201F; --ink-2:#465250; --muted:#74807E; --line:#D7DDDB; --line-2:#C3CBC9;
+  --accent:#0E6B70; --accent-ink:#0A5559; --accent-soft:#DCEEEE;
+  --warn:#8F6210; --warn-soft:#F7EDD8; --bad:#A63D2F; --bad-soft:#F8E4E0; --good:#2E7D4F; --good-soft:#E1F2E7;
+  --s1:#E6F1F1; --s2:#C2E0E0; --s3:#8FC7C8; --s4:#4EA5A8; --s5:#0E6B70;
+  --s1-ink:var(--ink); --s2-ink:var(--ink); --s3-ink:var(--ink); --s4-ink:#FFFFFF; --s5-ink:#FFFFFF;
+  --shadow:0 1px 2px rgba(22,32,31,.06),0 8px 24px -12px rgba(22,32,31,.18);
+  --display:"Bricolage Grotesque","Avenir Next","Segoe UI",system-ui,sans-serif;
+  --body:"IBM Plex Sans","Segoe UI",system-ui,-apple-system,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,"Cascadia Mono",Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0F1514; --surface:#171F1E; --surface-2:#1E2827;
+    --ink:#EBEFEE; --ink-2:#B5BEBC; --muted:#84908E; --line:#2A3634; --line-2:#37453F;
+    --accent:#5FC1C4; --accent-ink:#8ED6D8; --accent-soft:#163536;
+    --warn:#E0B15A; --warn-soft:#332811; --bad:#E58575; --bad-soft:#3A1F1B; --good:#72C596; --good-soft:#173125;
+    --s1:#1A2C2D; --s2:#1F4345; --s3:#275E60; --s4:#35858A; --s5:#5FC1C4;
+    --s1-ink:var(--ink); --s2-ink:var(--ink); --s3-ink:var(--ink); --s4-ink:var(--ink); --s5-ink:#0F1514;
+    --shadow:0 1px 2px rgba(0,0,0,.4),0 8px 24px -12px rgba(0,0,0,.6);
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0F1514; --surface:#171F1E; --surface-2:#1E2827;
+  --ink:#EBEFEE; --ink-2:#B5BEBC; --muted:#84908E; --line:#2A3634; --line-2:#37453F;
+  --accent:#5FC1C4; --accent-ink:#8ED6D8; --accent-soft:#163536;
+  --warn:#E0B15A; --warn-soft:#332811; --bad:#E58575; --bad-soft:#3A1F1B; --good:#72C596; --good-soft:#173125;
+  --s1:#1A2C2D; --s2:#1F4345; --s3:#275E60; --s4:#35858A; --s5:#5FC1C4;
+  --s1-ink:var(--ink); --s2-ink:var(--ink); --s3-ink:var(--ink); --s4-ink:var(--ink); --s5-ink:#0F1514;
+  --shadow:0 1px 2px rgba(0,0,0,.4),0 8px 24px -12px rgba(0,0,0,.6);
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.55;-webkit-font-smoothing:antialiased}
+a{color:var(--accent-ink);text-decoration-color:color-mix(in oklab,var(--accent) 45%,transparent);text-underline-offset:2px}
+a:hover{text-decoration-color:var(--accent)}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:2px}
+.wrap{max-width:1140px;margin:0 auto;padding-inline:16px;padding-block:32px 64px}
+@media (min-width:720px){.wrap{padding-inline:28px}}
+h1,h2,h3,h4{font-family:var(--display);text-wrap:balance;margin:0;line-height:1.1;letter-spacing:-.01em}
+h1{font-size:clamp(2.1rem,5vw,3.4rem);font-weight:800}
+h2{font-size:clamp(1.45rem,2.6vw,1.9rem);font-weight:700;margin-bottom:.35em}
+h3{font-size:1.15rem;font-weight:700}
+p{margin:0 0 .9em;max-width:70ch}
+ul,ol{margin:0 0 1em;padding-left:1.25em;max-width:72ch}
+li{margin-bottom:.35em}
+.eyebrow{font-family:var(--mono);font-size:.72rem;letter-spacing:.09em;text-transform:uppercase;color:var(--muted)}
+header.top{display:grid;gap:18px;padding-bottom:28px;border-bottom:1px solid var(--line)}
+.top .meta{display:flex;flex-wrap:wrap;gap:8px 18px;color:var(--ink-2);font-size:.9rem}
+.lede{font-size:1.12rem;color:var(--ink-2);max-width:66ch}
+.layout{display:grid;grid-template-columns:minmax(0,1fr);gap:32px;margin-top:32px}
+@media (min-width:960px){.layout{grid-template-columns:220px minmax(0,1fr);gap:48px}}
+nav.toc{position:sticky;top:calc(env(safe-area-inset-top,0px) + 16px);align-self:start;display:none}
+@media (min-width:960px){nav.toc{display:block}}
+nav.toc ol{list-style:none;padding:0;margin:0;display:grid;gap:2px;border-left:1px solid var(--line)}
+nav.toc a{display:block;padding:6px 12px;color:var(--ink-2);text-decoration:none;font-size:.88rem;border-left:2px solid transparent;margin-left:-1px}
+nav.toc a:hover{color:var(--ink);border-left-color:var(--line-2)}
+main{display:grid;gap:56px;min-width:0}
+section{min-width:0}
+.section-head{display:flex;align-items:baseline;gap:14px;margin-bottom:18px}
+.section-head .eyebrow{flex:none}
+.verdict{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:24px;box-shadow:var(--shadow);display:grid;gap:18px}
+.verdict .big{font-family:var(--display);font-size:clamp(1.25rem,2.4vw,1.6rem);font-weight:700;line-height:1.25;max-width:32ch}
+.tiles{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(160px,1fr))}
+.tile{background:var(--surface-2);border-radius:10px;padding:14px 16px;display:grid;gap:4px}
+.tile .v{font-family:var(--display);font-size:1.7rem;font-weight:800;line-height:1;color:var(--ink);font-variant-numeric:tabular-nums}
+.tile .l{font-size:.85rem;color:var(--ink-2)}
+.tile .s{font-size:.75rem;color:var(--muted)}
+.callout{border-left:3px solid var(--accent);background:var(--accent-soft);padding:14px 18px;border-radius:0 10px 10px 0;margin:0 0 1em}
+.callout.warn{border-left-color:var(--warn);background:var(--warn-soft)}
+.callout.bad{border-left-color:var(--bad);background:var(--bad-soft)}
+.callout p:last-child{margin-bottom:0}
+.constats{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));list-style:none;padding:0;max-width:none}
+.constats li{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin:0;display:grid;gap:6px}
+.constats b{font-family:var(--display);font-weight:700;font-size:1.02rem}
+.constats span{color:var(--ink-2);font-size:.93rem}
+.criteria{display:grid;gap:10px;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));list-style:none;padding:0;max-width:none}
+.criteria li{margin:0;padding:12px 14px;background:var(--surface-2);border-radius:10px;font-size:.92rem}
+.criteria b{display:block;margin-bottom:2px}
+.tablewrap{overflow-x:auto;border:1px solid var(--line);border-radius:12px;background:var(--surface)}
+table{border-collapse:collapse;width:100%;min-width:860px;font-size:.9rem}
+th,td{padding:10px 12px;text-align:left;vertical-align:middle;border-bottom:1px solid var(--line)}
+thead th{font-family:var(--mono);font-size:.7rem;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);font-weight:500;background:var(--surface-2)}
+tbody tr:last-child td{border-bottom:none}
+td.name{font-weight:600;min-width:220px}
+td.name small{display:block;font-weight:400;color:var(--muted);font-size:.8rem}
+td.sc{text-align:center;padding:6px}
+.cell{display:inline-grid;place-items:center;width:34px;height:30px;border-radius:6px;font-family:var(--mono);font-size:.85rem;font-weight:500}
+.c1{background:var(--s1);color:var(--s1-ink)}.c2{background:var(--s2);color:var(--s2-ink)}.c3{background:var(--s3);color:var(--s3-ink)}.c4{background:var(--s4);color:var(--s4-ink)}.c5{background:var(--s5);color:var(--s5-ink)}
+td.total{font-family:var(--display);font-weight:800;font-size:1.05rem;text-align:center}
+td.rev{min-width:230px}
+.range{position:relative;height:22px;display:flex;align-items:center}
+.range .track{position:absolute;inset:9px 0;height:4px;background:var(--surface-2);border-radius:2px}
+.range .bar{position:absolute;top:7px;height:8px;border-radius:4px;background:var(--accent)}
+.range .lab{position:relative;font-family:var(--mono);font-size:.78rem;color:var(--ink-2);margin-left:auto;background:var(--surface);padding-left:6px}
+tr.avoid td{color:var(--muted)}
+tr.avoid td.name{color:var(--ink-2)}
+tr.top td.name::before{content:"";display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--accent);margin-right:8px;vertical-align:1px}
+.legend{display:flex;flex-wrap:wrap;gap:10px 18px;margin-top:10px;font-size:.82rem;color:var(--ink-2)}
+.legend .cell{width:26px;height:22px;font-size:.72rem;margin-right:4px}
+.fiches{display:grid;gap:20px}
+.fiche{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:22px 24px;display:grid;gap:14px;box-shadow:var(--shadow)}
+.fiche .head{display:flex;flex-wrap:wrap;gap:8px 16px;align-items:baseline}
+.fiche .rank{font-family:var(--display);font-weight:800;font-size:2rem;line-height:1;color:var(--accent)}
+.fiche h3{font-size:1.3rem}
+.fiche .score{margin-left:auto;font-family:var(--mono);font-size:.82rem;color:var(--muted)}
+.fiche .grid{display:grid;gap:14px 24px;grid-template-columns:repeat(auto-fit,minmax(240px,1fr))}
+.fiche dl{margin:0;display:grid;gap:4px}
+.fiche dt{font-family:var(--mono);font-size:.7rem;letter-spacing:.07em;text-transform:uppercase;color:var(--muted)}
+.fiche dd{margin:0;font-size:.94rem}
+.fiche ul{margin-bottom:0}
+.fiche .who{font-family:var(--mono);font-size:.7rem;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+.pill{display:inline-block;font-family:var(--mono);font-size:.72rem;padding:2px 8px;border-radius:999px;border:1px solid var(--line-2);color:var(--ink-2);margin-right:6px}
+.pill.ok{background:var(--good-soft);color:var(--good);border-color:transparent}
+.pill.mid{background:var(--warn-soft);color:var(--warn);border-color:transparent}
+.pill.ko{background:var(--bad-soft);color:var(--bad);border-color:transparent}
+.split{display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(280px,1fr))}
+.box{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:18px 20px}
+.box h3{margin-bottom:10px}
+.box ul{margin-bottom:0;max-width:none}
+.plan{display:grid;gap:14px}
+.phase{display:grid;grid-template-columns:96px minmax(0,1fr);gap:16px;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:16px 18px}
+@media (max-width:560px){.phase{grid-template-columns:1fr}}
+.phase .when{font-family:var(--mono);font-size:.8rem;color:var(--accent-ink);font-weight:500;padding-top:3px}
+.phase h4{font-size:1.02rem;margin-bottom:6px}
+.phase ul{margin-bottom:0;max-width:none;font-size:.94rem}
+.avoid-list{list-style:none;padding:0;max-width:none;display:grid;gap:8px}
+.avoid-list li{display:grid;grid-template-columns:minmax(150px,220px) minmax(0,1fr);gap:12px;padding:10px 14px;border:1px solid var(--line);border-radius:10px;background:var(--surface);font-size:.93rem}
+@media (max-width:560px){.avoid-list li{grid-template-columns:1fr;gap:4px}}
+.avoid-list b{font-weight:600}
+.avoid-list span{color:var(--ink-2)}
+.legal table{min-width:0;font-size:.92rem}
+.legal td:first-child{color:var(--ink-2);white-space:nowrap}
+@media (max-width:560px){.legal td:first-child{white-space:normal}}
+.sources ol{font-size:.86rem;color:var(--ink-2);max-width:none}
+@media (min-width:800px){.sources ol{columns:2;column-gap:32px}}
+.sources li{break-inside:avoid}
+footer{margin-top:48px;padding-top:20px;border-top:1px solid var(--line);color:var(--muted);font-size:.85rem}
+</style>
+
+<div class="wrap">
+<header class="top">
+  <div class="eyebrow">Étude de marché · Business pilotés par une IA · Particulier en France</div>
+  <h1>Radar Business Autonome</h1>
+  <p class="lede">Quels business Claude peut construire et faire tourner quasi seul pour te rapporter de l'argent, classés par autonomie réelle, coût, vitesse et revenu plausible à 12 mois. Quatre analyses parallèles (micro-SaaS, contenu, produits digitaux et jeux, marché français et cadre légal), une soixantaine de sources, chiffres estimés signalés comme tels.</p>
+  <div class="meta">
+    <span>17 septembre 2026</span>
+    <span>15 modèles évalués · 6 critères</span>
+    <span>Fourchettes de revenu = estimations, médiane en bas de fourchette</span>
+  </div>
+</header>
+
+<div class="layout">
+<nav class="toc" aria-label="Sommaire">
+  <ol>
+    <li><a href="#verdict">Verdict</a></li>
+    <li><a href="#constats">Constats 2026</a></li>
+    <li><a href="#methode">Méthode</a></li>
+    <li><a href="#matrice">Matrice des 15 modèles</a></li>
+    <li><a href="#top5">Top 5 détaillé</a></li>
+    <li><a href="#eviter">À éviter</a></li>
+    <li><a href="#partage">Qui fait quoi</a></li>
+    <li><a href="#plan">Plan 90 jours</a></li>
+    <li><a href="#legal">Cadre légal FR</a></li>
+    <li><a href="#sources">Sources et réserves</a></li>
+  </ol>
+</nav>
+
+<main>
+
+<section id="verdict">
+  <div class="verdict">
+    <div class="eyebrow">Verdict en 60 secondes</div>
+    <div class="big">Lancer deux pistes en parallèle : des jeux web sur portails (retour en semaines, zéro coût) et un hub d'outils pour micro-entrepreneurs autour de la facturation électronique 2026-2027 (demande réglementaire massive, monétisation par affiliation et newsletter).</div>
+    <div class="tiles">
+      <div class="tile"><span class="v">24<span style="font-size:1rem;color:var(--muted)">/30</span></span><span class="l">Meilleur score : jeux web HTML5</span><span class="s">Poki, CrazyGames, puis daily puzzle sur domaine propre</span></div>
+      <div class="tile"><span class="v">0–40 €</span><span class="l">Coût mensuel d'infrastructure</span><span class="s">Cloudflare, Supabase gratuit, domaine ~12 €/an</span></div>
+      <div class="tile"><span class="v">66 j</span><span class="l">Médiane jusqu'au premier euro d'une newsletter</span><span class="s">Donnée beehiiv 2026, la plus rapide des pistes contenu</span></div>
+      <div class="tile"><span class="v">500–4 000 €</span><span class="l">Revenu mensuel plausible à 12 mois si les deux pistes tiennent</span><span class="s">Estimation. La majorité des projets restent sous 200 €/mois</span></div>
+    </div>
+    <div class="callout warn">
+      <p><b>Ce que je peux réellement faire seul :</b> coder, écrire, générer des jeux et des outils, construire des pipelines de données, publier sur un site, analyser les métriques, maintenir et corriger. <b>Ce qui te revient :</b> créer les comptes (URSSAF, Stripe ou Lemon Squeezy, portails de jeux, domaine), valider les publications publiques, arbitrer le juridique et l'argent. Environ une demi-journée de mise en place, puis 30 à 60 minutes par semaine.</p>
+    </div>
+  </div>
+</section>
+
+<section id="constats">
+  <div class="section-head"><span class="eyebrow">01</span><h2>Cinq constats qui changent la donne en 2026</h2></div>
+  <ul class="constats">
+    <li><b>Produire du contenu ne vaut plus rien, la donnée et l'outil valent encore.</b><span>Le trafic Google des éditeurs a chuté de 33 % en 2025 avec les AI Overviews. Ce qui survit : pages adossées à des données primaires, calculateurs, comparateurs vivants. Les pages citées par les IA gagnent 35 % de clics.</span></li>
+    <li><b>Le contenu 100 % IA est la cible n° 1 des plateformes.</b><span>YouTube détecte le contenu « générique ou répétitif » au niveau de la chaîne, 16 chaînes à 35 M d'abonnés cumulés supprimées en janvier 2026. Etsy a retiré 12 000 listings en un trimestre. Steam flag 31 % des sorties. L'AI Act impose l'étiquetage depuis le 2 août 2026.</span></li>
+    <li><b>Les portails de jeux web apportent le trafic à ta place.</b><span>Poki et CrazyGames distribuent eux-mêmes les jeux, 50 à 60 % du revenu pub pour le développeur, 200 à 2 000 $/mois par jeu qui marche. Un solo a atteint 67 M de parties en 2025 après 25 jeux mobiles restés invisibles.</span></li>
+    <li><b>Une échéance réglementaire française crée une fenêtre de 12 mois.</b><span>Facturation électronique : réception obligatoire depuis le 1er septembre 2026, émission le 1er septembre 2027, y compris pour les micro-entrepreneurs. 101 plateformes agréées, aucune pédagogie lisible pour eux.</span></li>
+    <li><b>Le micro-SaaS solo marche, mais la distribution est le goulot.</b><span>Environ 70 % des micro-SaaS restent sous 1 000 $ de MRR. Les succès greffent une fonction manquante sur une plateforme massive (Gmail, Poshmark, ChatGPT) ou servent un métier précis. Les AI wrappers génériques sont saturés.</span></li>
+  </ul>
+</section>
+
+<section id="methode">
+  <div class="section-head"><span class="eyebrow">02</span><h2>Méthode et critères</h2></div>
+  <p>Quatre agents de recherche ont travaillé en parallèle sur le micro-SaaS et les extensions, les business de contenu, les produits digitaux et les jeux, puis les besoins du marché français et le cadre légal. J'ai croisé leurs rapports, écarté les chiffres non sourcés quand une source primaire les contredisait, et noté chaque modèle de 1 à 5 sur six critères pondérés à l'identique.</p>
+  <ul class="criteria">
+    <li><b>Autonomie IA</b>Part du travail que je fais seul : produit, contenu, maintenance, analyse.</li>
+    <li><b>Coût de départ</b>5 = quasi nul. 3 = frais fixes type Apple 99 $/an ou Steam 100 $.</li>
+    <li><b>Vitesse du premier euro</b>5 = semaines. 1 = un an ou jamais pour la médiane.</li>
+    <li><b>Revenu à 12 mois</b>Sur la fourchette plausible pour un premier produit sans audience.</li>
+    <li><b>Risque plateforme et légal</b>5 = faible. 1 = démonétisation ou bannissement fréquents.</li>
+    <li><b>Concurrence</b>5 = niche peu servie. 1 = saturée par l'IA.</li>
+  </ul>
+</section>
+
+<section id="matrice">
+  <div class="section-head"><span class="eyebrow">03</span><h2>Matrice des 15 modèles</h2></div>
+  <p>Triée par score total. Les revenus sont des fourchettes mensuelles plausibles à 12 mois, hors exceptions virales. Le point vert marque les cinq pistes détaillées plus bas.</p>
+  <div class="tablewrap">
+  <table>
+    <thead><tr>
+      <th>Modèle</th><th style="text-align:center">Autonomie</th><th style="text-align:center">Coût</th><th style="text-align:center">Vitesse</th><th style="text-align:center">Revenu</th><th style="text-align:center">Risque</th><th style="text-align:center">Concurrence</th><th style="text-align:center">Total</th><th>Revenu mensuel à 12 mois</th>
+    </tr></thead>
+    <tbody>
+      <tr class="top"><td class="name">Jeux web HTML5 sur portails<small>Poki, CrazyGames, puis daily puzzle sur site propre</small></td><td class="sc"><span class="cell c5">5</span></td><td class="sc"><span class="cell c5">5</span></td><td class="sc"><span class="cell c4">4</span></td><td class="sc"><span class="cell c3">3</span></td><td class="sc"><span class="cell c4">4</span></td><td class="sc"><span class="cell c3">3</span></td><td class="total">24</td><td class="rev"><div class="range"><div class="track"></div><div class="bar" style="left:3.3%;width:46.7%"></div><span class="lab">100 – 1 500 €</span></div></td></tr>
+      <tr class="top"><td class="name">Hub facturation électronique micro-entrepreneurs<small>Comparateur des plateformes agréées, quiz conformité, simulateur net</small></td><td class="sc"><span class="cell c4">4</span></td><td class="sc"><span class="cell c5">5</span></td><td class="sc"><span class="cell c3">3</span></td><td class="sc"><span class="cell c3">3</span></td><td class="sc"><span class="cell c4">4</span></td><td class="sc"><span class="cell c4">4</span></td><td class="total">23</td><td class="rev"><div class="range"><div class="track"></div><div class="bar" style="left:3.3%;width:46.7%"></div><span class="lab">100 – 1 500 €</span></div></td></tr>
+      <tr class="top"><td class="name">Newsletter B2B ou métier (beehiiv)<small>Veille payante + sponsors, adossée au hub ci-dessus</small></td><td class="sc"><span class="cell c4">4</span></td><td class="sc"><span class="cell c5">5</span></td><td class="sc"><span class="cell c3">3</span></td><td class="sc"><span class="cell c3">3</span></td><td class="sc"><span class="cell c5">5</span></td><td class="sc"><span class="cell c3">3</span></td><td class="total">23</td><td class="rev"><div class="range"><div class="track"></div><div class="bar" style="left:10%;width:73.3%"></div><span class="lab">300 – 2 500 €</span></div></td></tr>
+      <tr class="top"><td class="name">Extension Chrome « une fonction »<small>Greffée sur Leboncoin, Vinted, LinkedIn, ChatGPT…</small></td><td class="sc"><span class="cell c4">4</span></td><td class="sc"><span class="cell c5">5</span></td><td class="sc"><span class="cell c4">4</span></td><td class="sc"><span class="cell c3">3</span></td><td class="sc"><span class="cell c2">2</span></td><td class="sc"><span class="cell c3">3</span></td><td class="total">21</td><td class="rev"><div class="range"><div class="track"></div><div class="bar" style="left:6.7%;width:60%"></div><span class="lab">200 – 2 000 €</span></div></td></tr>
+      <tr class="top"><td class="name">Simulateur petits bailleurs<small>« Puis-je louer ce bien en 2026 ? » DPE, encadrement, affiliation travaux</small></td><td class="sc"><span class="cell c4">4</span></td><td class="sc"><span class="cell c5">5</span></td><td class="sc"><span class="cell c2">2</span></td><td class="sc"><span class="cell c3">3</span></td><td class="sc"><span class="cell c3">3</span></td><td class="sc"><span class="cell c4">4</span></td><td class="total">21</td><td class="rev"><div class="range"><div class="track"></div><div class="bar" style="left:3.3%;width:46.7%"></div><span class="lab">100 – 1 500 €</span></div></td></tr>
+      <tr><td class="name">API de données de niche<small>Open data française exposée en API payante sur Cloudflare</small></td><td class="sc"><span class="cell c5">5</span></td><td class="sc"><span class="cell c5">5</span></td><td class="sc"><span class="cell c2">2</span></td><td class="sc"><span class="cell c2">2</span></td><td class="sc"><span class="cell c3">3</span></td><td class="sc"><span class="cell c4">4</span></td><td class="total">21</td><td class="rev"><div class="range"><div class="track"></div><div class="bar" style="left:6.7%;width:60%"></div><span class="lab">200 – 2 000 €</span></div></td></tr>
+      <tr><td class="name">Relance impayés en un clic<small>Courriers légaux, mise en demeure, injonction pré-remplie</small></td><td class="sc"><span class="cell c4">4</span></td><td class="sc"><span class="cell c5">5</span></td><td class="sc"><span class="cell c3">3</span></td><td class="sc"><span class="cell c2">2</span></td><td class="sc"><span class="cell c3">3</span></td><td class="sc"><span class="cell c4">4</span></td><td class="total">21</td><td class="rev"><div class="range"><div class="track"></div><div class="bar" style="left:3.3%;width:30%"></div><span class="lab">100 – 1 000 €</span></div></td></tr>
+      <tr><td class="name">Outils dev, boilerplates, serveurs MCP<small>Vendus via Lemon Squeezy, marché jeune</small></td><td class="sc"><span class="cell c5">5</span></td><td class="sc"><span class="cell c5">5</span></td><td class="sc"><span class="cell c3">3</span></td><td class="sc"><span class="cell c2">2</span></td><td class="sc"><span class="cell c4">4</span></td><td class="sc"><span class="cell c2">2</span></td><td class="total">21</td><td class="rev"><div class="range"><div class="track"></div><div class="bar" style="left:3.3%;width:30%"></div><span class="lab">100 – 1 000 €</span></div></td></tr>
+      <tr><td class="name">Outil vertical TPE (artisans)<small>Audit et animation de fiche Google, 15–29 €/mois</small></td><td class="sc"><span class="cell c3">3</span></td><td class="sc"><span class="cell c5">5</span></td><td class="sc"><span class="cell c2">2</span></td><td class="sc"><span class="cell c4">4</span></td><td class="sc"><span class="cell c4">4</span></td><td class="sc"><span class="cell c3">3</span></td><td class="total">21</td><td class="rev"><div class="range"><div class="track"></div><div class="bar" style="left:16.7%;width:83.3%"></div><span class="lab">500 – 3 000 €</span></div></td></tr>
+      <tr class="avoid"><td class="name">Etsy téléchargements numériques<small>Templates, printables</small></td><td class="sc"><span class="cell c3">3</span></td><td class="sc"><span class="cell c5">5</span></td><td class="sc"><span class="cell c3">3</span></td><td class="sc"><span class="cell c1">1</span></td><td class="sc"><span class="cell c2">2</span></td><td class="sc"><span class="cell c1">1</span></td><td class="total">15</td><td class="rev"><div class="range"><div class="track"></div><div class="bar" style="left:1.7%;width:15%"></div><span class="lab">50 – 500 €</span></div></td></tr>
+      <tr class="avoid"><td class="name">Amazon KDP low-content<small>Carnets, planners, ebooks IA</small></td><td class="sc"><span class="cell c4">4</span></td><td class="sc"><span class="cell c5">5</span></td><td class="sc"><span class="cell c2">2</span></td><td class="sc"><span class="cell c1">1</span></td><td class="sc"><span class="cell c2">2</span></td><td class="sc"><span class="cell c1">1</span></td><td class="total">15</td><td class="rev"><div class="range"><div class="track"></div><div class="bar" style="left:.7%;width:9.3%"></div><span class="lab">20 – 300 €</span></div></td></tr>
+      <tr class="avoid"><td class="name">YouTube faceless long format<small>Plafond élevé, détection au niveau chaîne</small></td><td class="sc"><span class="cell c3">3</span></td><td class="sc"><span class="cell c4">4</span></td><td class="sc"><span class="cell c1">1</span></td><td class="sc"><span class="cell c3">3</span></td><td class="sc"><span class="cell c1">1</span></td><td class="sc"><span class="cell c2">2</span></td><td class="total">14</td><td class="rev"><div class="range"><div class="track"></div><div class="bar" style="left:6.7%;width:60%"></div><span class="lab">200 – 2 000 €, médiane &lt; 100</span></div></td></tr>
+      <tr class="avoid"><td class="name">Apps mobiles utilitaires<small>Apple 99 $/an, 81 % ne dépassent jamais 1 000 $/mois</small></td><td class="sc"><span class="cell c3">3</span></td><td class="sc"><span class="cell c3">3</span></td><td class="sc"><span class="cell c2">2</span></td><td class="sc"><span class="cell c2">2</span></td><td class="sc"><span class="cell c2">2</span></td><td class="sc"><span class="cell c2">2</span></td><td class="total">14</td><td class="rev"><div class="range"><div class="track"></div><div class="bar" style="left:0;width:16.7%"></div><span class="lab">0 – 500 €</span></div></td></tr>
+      <tr class="avoid"><td class="name">TikTok Creator Rewards<small>RPM 0,40–1 $, publication API privée sans audit</small></td><td class="sc"><span class="cell c2">2</span></td><td class="sc"><span class="cell c5">5</span></td><td class="sc"><span class="cell c2">2</span></td><td class="sc"><span class="cell c1">1</span></td><td class="sc"><span class="cell c2">2</span></td><td class="sc"><span class="cell c1">1</span></td><td class="total">13</td><td class="rev"><div class="range"><div class="track"></div><div class="bar" style="left:3.3%;width:23.3%"></div><span class="lab">100 – 800 €</span></div></td></tr>
+      <tr class="avoid"><td class="name">Jeu Steam<small>Médiane 350 $ à vie, 100 $ de ticket d'entrée</small></td><td class="sc"><span class="cell c3">3</span></td><td class="sc"><span class="cell c3">3</span></td><td class="sc"><span class="cell c1">1</span></td><td class="sc"><span class="cell c1">1</span></td><td class="sc"><span class="cell c2">2</span></td><td class="sc"><span class="cell c1">1</span></td><td class="total">11</td><td class="rev"><div class="range"><div class="track"></div><div class="bar" style="left:0;width:3.3%"></div><span class="lab">0 – 100 €</span></div></td></tr>
+    </tbody>
+  </table>
+  </div>
+  <div class="legend">
+    <span><span class="cell c1">1</span> faible</span><span><span class="cell c3">3</span> moyen</span><span><span class="cell c5">5</span> excellent</span>
+    <span>Barre de revenu : échelle 0 à 3 000 €/mois, estimation à 12 mois</span>
+  </div>
+</section>
+
+<section id="top5">
+  <div class="section-head"><span class="eyebrow">04</span><h2>Top 5 détaillé</h2></div>
+  <div class="fiches">
+
+  <article class="fiche">
+    <div class="head"><span class="rank">1</span><h3>Jeux web HTML5 sur portails, puis un daily puzzle sur domaine propre</h3><span class="score">24 / 30</span></div>
+    <p>Des jeux casual (arcade, puzzle, idle) codés en Phaser ou PixiJS, soumis à Poki et CrazyGames qui les distribuent et partagent la pub. Le code est le cœur de la valeur, ce que je fais le mieux. Une fois les données des portails connues, un jeu quotidien type Wordle sur ton propre domaine capte du trafic récurrent monétisé en pub.</p>
+    <div class="grid">
+      <dl><dt>Cible</dt><dd>Ados et jeunes adultes mondiaux sur les portails. Adultes 25-55 pour le daily puzzle.</dd></dl>
+      <dl><dt>Modèle de revenu</dt><dd>Poki 50 % du revenu pub (100 % sur ton propre trafic), CrazyGames 60 %. eCPM rewarded 8-15 $ en Europe, 15-28 $ aux États-Unis.</dd></dl>
+      <dl><dt>Preuves</dt><dd>Un jeu casual qui marche : 200 à 2 000 $/mois. Exemple bas : 451 000 parties pour 557 €. Exemple haut : solo à 67 M de parties en 2025 vivant de ses cinq jeux Poki.</dd></dl>
+      <dl><dt>Revenu plausible</dt><dd>6 mois : 0 à 300 €/mois avec 1 à 3 jeux acceptés. 12 mois : 100 à 1 500 €/mois avec 5 à 10 jeux itérés sur les données.</dd></dl>
+    </div>
+    <div><span class="pill ok">Coût nul</span><span class="pill ok">Retour en semaines</span><span class="pill mid">Sélection par les portails</span></div>
+    <div class="grid">
+      <div><div class="who">Je fais seul</div><ul><li>Concept, code complet, intégration des SDK Poki et CrazyGames, sons et sprites sous licence libre.</li><li>Variantes rapides à partir des métriques de rétention.</li><li>Site du daily puzzle, SEO, génération quotidienne des grilles.</li></ul></div>
+      <div><div class="who">Tu fais</div><ul><li>Créer les comptes développeur des portails et valider chaque soumission.</li><li>Tester le « fun » dix minutes par jeu, c'est le seul filtre que je ne remplace pas.</li><li>Compte AdSense ou Ezoic pour le daily puzzle.</li></ul></div>
+    </div>
+  </article>
+
+  <article class="fiche">
+    <div class="head"><span class="rank">2</span><h3>Hub facturation électronique et fiscalité pour micro-entrepreneurs</h3><span class="score">23 / 30</span></div>
+    <p>Un site d'outils, pas d'articles : comparateur des 101 plateformes agréées filtré « micro-entrepreneur en franchise de TVA, moins de 20 factures par mois, gratuit ou moins de 10 €/mois », quiz « suis-je conforme ? » avec checklist et rappels, générateur des mentions obligatoires 2026-2027, simulateur « net dans la poche » intégrant ACRE, versement libératoire et franchissement de seuil TVA. C'est exactement le SEO « data-first » qui survit aux AI Overviews, sur un marché francophone où les outils anglophones sont absents.</p>
+    <div class="grid">
+      <dl><dt>Cible</dt><dd>Les micro-entrepreneurs français, tous concernés par la réception depuis le 1er septembre 2026 et l'émission au 1er septembre 2027.</dd></dl>
+      <dl><dt>Modèle de revenu</dt><dd>Affiliation logiciels et banques pro via Awin et Affilae (Qonto ~20-50 € par compte, BoursoBank ~50 €, Pennylane, Indy). Checklist ou mini-formation à 29-49 €.</dd></dl>
+      <dl><dt>Preuves de demande</dt><dd>Sources officielles URSSAF et economie.gouv, offres actuelles à 10-50 €/mois jugées chères pour un CA de 15 k€, guides 2026 qui se contredisent sur les taux.</dd></dl>
+      <dl><dt>Revenu plausible</dt><dd>6 mois : 0 à 200 €/mois, le temps que Google indexe. 12 mois : 100 à 1 500 €/mois, davantage avec la newsletter.</dd></dl>
+    </div>
+    <div><span class="pill ok">Fenêtre réglementaire 12 mois</span><span class="pill ok">Concurrence FR faible sur la pédagogie</span><span class="pill mid">Lent : autorité de domaine</span></div>
+    <div class="grid">
+      <div><div class="who">Je fais seul</div><ul><li>Base des plateformes agréées, fiches, comparateur, simulateurs, pages par cas d'usage, veille des décrets.</li><li>Mise à jour automatique des taux et rappels calendaires.</li><li>Contenu de la newsletter et séquences email.</li></ul></div>
+      <div><div class="who">Tu fais</div><ul><li>Domaine, Cloudflare, Search Console, inscriptions aux programmes d'affiliation.</li><li>Valider les taux publiés (les sources 2026 divergent, 25,6 % ou 26,1 % en BNC) : c'est ta responsabilité qui est engagée.</li><li>Un nom d'auteur réel et des mentions légales.</li></ul></div>
+    </div>
+  </article>
+
+  <article class="fiche">
+    <div class="head"><span class="rank">3</span><h3>Newsletter métier payante, adossée au hub</h3><span class="score">23 / 30</span></div>
+    <p>La veille hebdomadaire « micro-entrepreneur » ou « petit bailleur » sur beehiiv, gratuite avec un palier payant et des sponsors. Aucune démonétisation algorithmique possible, audience propriétaire, et le hub d'outils lui apporte les inscrits. Le produit payant peut être la checklist ou le simulateur premium du hub.</p>
+    <div class="grid">
+      <dl><dt>Données beehiiv 2026</dt><dd>Médiane 66 jours jusqu'au premier euro. Conversion gratuit vers payant médiane 0,62 %, top quartile 2-5 %. Prix médian 10 $/mois, 20 $ en finance.</dd></dl>
+      <dl><dt>Sponsoring</dt><dd>CPM 40-120 $ en finance et B2B. Sous 3 000 abonnés, forfaits 50-250 € par placement.</dd></dl>
+      <dl><dt>Ordre de grandeur</dt><dd>5 000 abonnés : 600 à 1 500 €/mois. 10 000 abonnés : 2 000 à 4 500 €/mois. Sur une même liste, la finance rapporte 11 fois plus que le voyage.</dd></dl>
+      <dl><dt>Revenu plausible</dt><dd>6 mois : 0 à 300 €/mois. 12 mois : 300 à 2 500 €/mois si la niche est B2B ou finance et la croissance soutenue.</dd></dl>
+    </div>
+    <div><span class="pill ok">Zéro risque plateforme</span><span class="pill ok">Automatisable via API beehiiv</span><span class="pill mid">Goulot : l'acquisition</span></div>
+    <div class="grid">
+      <div><div class="who">Je fais seul</div><ul><li>Veille, rédaction, segmentation, tests d'objets, landing pages, archives SEO.</li><li>Publication programmée par l'API beehiiv.</li></ul></div>
+      <div><div class="who">Tu fais</div><ul><li>Compte beehiiv et Stripe.</li><li>Relire et signer : une newsletter a besoin d'une voix et de prises de position.</li><li>30 minutes par semaine de relais sur LinkedIn ou X sous ton nom, c'est le moteur du canal.</li></ul></div>
+    </div>
+  </article>
+
+  <article class="fiche">
+    <div class="head"><span class="rank">4</span><h3>Extension Chrome « une fonction » sur une plateforme massive</h3><span class="score">21 / 30</span></div>
+    <p>Combler un manque évident dans Leboncoin, Vinted, LinkedIn, Gmail ou ChatGPT. Le Chrome Web Store est lui-même le canal de distribution, et le cycle de feedback se compte en jours. Angle français peu exploité : les outils pour vendeurs Vinted et Leboncoin.</p>
+    <div class="grid">
+      <dl><dt>Preuves</dt><dd>Easy Folders : 3 700 $ MRR six mois après lancement. Closet Tools (Poshmark) : 42 000 $/mois à 30 $/mois. GoFullPage : 10 000 $/mois à 1 $/mois.</dd></dl>
+      <dl><dt>Benchmarks</dt><dd>2 000 à 10 000 utilisateurs actifs : 100 à 1 500 $/mois en abonnement. Conversion freemium 2-5 %.</dd></dl>
+      <dl><dt>Modèle</dt><dd>Freemium puis 5-10 €/mois, ou licence à vie 29-69 €.</dd></dl>
+      <dl><dt>Revenu plausible</dt><dd>6 mois : 0 à 500 €/mois. 12 mois : 200 à 2 000 €/mois.</dd></dl>
+    </div>
+    <div><span class="pill ok">Canal intégré</span><span class="pill ko">Dépendance à la plateforme hôte</span></div>
+    <div class="grid">
+      <div><div class="who">Je fais seul</div><ul><li>90 % du code, fiche store, landing, changelog, support de premier niveau par email.</li><li>Correction quand la plateforme hôte change son interface.</li></ul></div>
+      <div><div class="who">Tu fais</div><ul><li>Compte développeur Chrome (5 $, vérification d'identité) et soumissions.</li><li>Répondre aux avis, encaisser via Stripe ou ExtensionPay.</li></ul></div>
+    </div>
+  </article>
+
+  <article class="fiche">
+    <div class="head"><span class="rank">5</span><h3>Simulateur « puis-je louer ce bien en 2026 ? » pour petits bailleurs</h3><span class="score">21 / 30</span></div>
+    <p>DPE, zone d'encadrement, type de bail en entrée. En sortie : verdict de mise en location, loyer de référence majoré, diagnostics requis, calendrier de travaux. Le coefficient électricité passé de 2,3 à 1,9 au 1er janvier 2026 sort 700 000 à 850 000 logements du statut de passoire : des centaines de milliers de bailleurs ne savent pas où ils en sont.</p>
+    <div class="grid">
+      <dl><dt>Cible</dt><dd>Propriétaires d'un ou deux biens, perdus entre interdictions G (2025), F (2028), E (2034) et gel des loyers.</dd></dl>
+      <dl><dt>Modèle</dt><dd>Affiliation diagnostiqueurs et travaux (Effy, Hellio, artisans RGE), gestion locative en ligne. Éviter l'assurance qui exige l'ORIAS.</dd></dl>
+      <dl><dt>Concurrence</dt><dd>Gestionnaires en ligne et simulateurs ADEME, mais aucun outil neutre qui combine les trois règles.</dd></dl>
+      <dl><dt>Revenu plausible</dt><dd>6 mois : 0 à 100 €/mois. 12 mois : 100 à 1 500 €/mois.</dd></dl>
+    </div>
+    <div><span class="pill ok">Besoin mesuré et durable</span><span class="pill mid">Mises à jour réglementaires fréquentes</span></div>
+    <div class="grid">
+      <div><div class="who">Je fais seul</div><ul><li>Moteur de règles, base des arrêtés d'encadrement par commune, pages par ville, contenus.</li></ul></div>
+      <div><div class="who">Tu fais</div><ul><li>Valider le moteur de règles à chaque décret, inscriptions aux programmes d'affiliation.</li></ul></div>
+    </div>
+  </article>
+
+  </div>
+  <div class="callout" style="margin-top:20px">
+    <p><b>Mentions honorables.</b> L'API open data (score 21) est le modèle le plus automatisable mais la demande par niche est incertaine. La relance d'impayés (21) répond à une douleur aiguë, 31 000 € d'impayés moyens pour 15 700 € de trésorerie dans les petites entreprises, et s'intègre naturellement au hub micro-entrepreneur comme module payant. L'outil vertical artisans (21) a le meilleur revenu potentiel mais exige que tu passes des appels.</p>
+  </div>
+</section>
+
+<section id="eviter">
+  <div class="section-head"><span class="eyebrow">05</span><h2>À éviter, et pourquoi</h2></div>
+  <ul class="avoid-list">
+    <li><b>Chaînes YouTube et TikTok 100 % IA</b><span>Cible explicite des politiques « contenu inauthentique ». Détection au niveau de la chaîne, rétroactive, cas documentés de 30 000 $/mois coupés du jour au lendemain. TikTok : RPM tombé à 0,40-1 $ et publication API privée sans audit. Utilisable seulement comme canal d'acquisition avec ta validation à chaque publication.</span></li>
+    <li><b>Sites d'affiliation « articles seulement »</b><span>Trafic éditeur en baisse de 33 % en 2025, pénalité « scaled content » sitewide dont 22 % des sites seulement se relèvent.</span></li>
+    <li><b>AI wrappers et générateurs de contenu génériques</b><span>Clonables en un week-end, marges brutes 25-35 %, saturés.</span></li>
+    <li><b>Steam</b><span>Médiane d'un jeu payant début 2026 : 350 $ à vie. 40 % ne remboursent pas le ticket de 100 $. Les jeux flaggés IA ne vendent quasiment pas.</span></li>
+    <li><b>Hypercasual mobile et apps utilitaires</b><span>Voodoo a quitté l'hypercasual en mars 2026. 81 % des apps n'atteignent jamais 1 000 $/mois. Acquisition dépendante de vidéos TikTok humaines.</span></li>
+    <li><b>Etsy templates et KDP low-content</b><span>Saturés, curation humaine exigée, 12 000 listings Etsy retirés en un trimestre pour divulgation IA. Revenus typiques sous 100 €/mois.</span></li>
+    <li><b>Podcasts IA et GPT Store</b><span>Spotify génère lui-même des podcasts personnalisés. GPT Store plafonne à 100-500 $/mois pour la quasi-totalité des créateurs.</span></li>
+    <li><b>Comparateurs assurance et crédit</b><span>Verrouillés par LeLynx, LesFurets, Meilleurtaux. L'intermédiation exige l'immatriculation ORIAS. Leads à 1-4,50 €.</span></li>
+  </ul>
+</section>
+
+<section id="partage">
+  <div class="section-head"><span class="eyebrow">06</span><h2>Qui fait quoi</h2></div>
+  <div class="split">
+    <div class="box">
+      <h3>Ce que je fais seul, en continu</h3>
+      <ul>
+        <li>Coder les jeux, outils, simulateurs, extensions, API et sites, puis les maintenir.</li>
+        <li>Construire et rafraîchir les bases de données (plateformes agréées, arrêtés, open data).</li>
+        <li>Rédiger newsletters, fiches, pages SEO, textes de store, réponses support de premier niveau.</li>
+        <li>Analyser les métriques et proposer des itérations chiffrées.</li>
+        <li>Publier sur les canaux 100 % automatisables : site, API beehiiv, RSS, GitHub Actions et Cloudflare Pages.</li>
+        <li>Tourner en tâche planifiée pour la veille et les mises à jour.</li>
+      </ul>
+    </div>
+    <div class="box">
+      <h3>Ce qui te revient, par principe</h3>
+      <ul>
+        <li>Créer les comptes et t'identifier : URSSAF, Stripe ou Lemon Squeezy, domaine, Cloudflare, portails de jeux, Chrome Web Store, beehiiv, programmes d'affiliation. Je ne saisis jamais d'identifiants, de moyens de paiement ni de documents d'identité.</li>
+        <li>Cliquer « publier » sur tout ce qui sort en public sur une plateforme tierce, et accepter les CGU.</li>
+        <li>Valider le contenu à responsabilité : taux fiscaux, règles juridiques, mentions légales.</li>
+        <li>Décider de l'argent : prix, remboursements, litiges, déclarations.</li>
+        <li>Tester le plaisir de jeu et relire ce qui porte ton nom.</li>
+      </ul>
+    </div>
+  </div>
+  <div class="callout warn" style="margin-top:16px">
+    <p><b>Leçon de Project Vend.</b> Quand Anthropic a laissé Claude tenir une boutique, la phase 1 a perdu de l'argent et la phase 2 est devenue rentable une fois des procédures strictes imposées : vérifier les coûts, chercher les prix du marché, suivre une checklist avant de fixer un prix. Je propose de fonctionner de la même façon : règles écrites, budget plafonné, aucune dépense ni engagement sans ta validation.</p>
+  </div>
+</section>
+
+<section id="plan">
+  <div class="section-head"><span class="eyebrow">07</span><h2>Plan 90 jours recommandé</h2></div>
+  <p>Deux pistes en parallèle : la piste jeux donne un retour rapide et finance l'apprentissage, la piste micro-entrepreneur construit un actif durable. Tout le reste attend d'avoir des données.</p>
+  <div class="plan">
+    <div class="phase"><div class="when">Jour 1 à 3</div><div><h4>Mise en place, une demi-journée de ton côté</h4><ul><li>Déclaration micro-entreprise sur autoentrepreneur.urssaf.fr, catégorie BIC prestations de services pour la pub et l'affiliation.</li><li>Domaine, Cloudflare, compte Lemon Squeezy (gère la TVA UE) ou Stripe, comptes développeur Poki et CrazyGames, beehiiv.</li><li>Je livre un dépôt Git par piste, des règles de fonctionnement écrites et un budget plafonné à 40 €/mois.</li></ul></div></div>
+    <div class="phase"><div class="when">Semaine 1 à 3</div><div><h4>Piste jeux : trois prototypes soumis</h4><ul><li>Trois jeux casual dans trois genres différents (puzzle, arcade réflexe, idle), SDK des portails intégrés, sons libres de droits.</li><li>Tu testes dix minutes chacun, je corrige, tu soumets.</li><li>Objectif : au moins un jeu accepté sur un portail avant le jour 30.</li></ul></div></div>
+    <div class="phase"><div class="when">Semaine 1 à 4</div><div><h4>Piste hub : version 1 en ligne</h4><ul><li>Base des 101 plateformes agréées et comparateur filtré micro-entrepreneur, quiz conformité avec checklist, simulateur net 2026.</li><li>Mentions légales, CGV, analytics sans bannière (Plausible ou Matomo exempté).</li><li>Tu t'inscris aux programmes d'affiliation Awin et Affilae, je pose les liens.</li></ul></div></div>
+    <div class="phase"><div class="when">Semaine 4 à 8</div><div><h4>Itérer sur les données</h4><ul><li>Jeux : lecture des métriques de rétention des portails, deux nouveaux jeux dans le genre qui marche, dépôt du daily puzzle sur domaine propre.</li><li>Hub : lancement de la newsletter hebdo, pages par cas d'usage et par plateforme, module « relance impayés » gratuit avec envoi recommandé payant.</li><li>Distribution humaine : un post LinkedIn par semaine signé de toi, deux réponses utiles par semaine sur les forums micro-entrepreneurs.</li></ul></div></div>
+    <div class="phase"><div class="when">Semaine 8 à 12</div><div><h4>Décider avec des chiffres</h4><ul><li>Point à J90 : parties par jour et revenu par jeu, visiteurs et clics affiliés du hub, abonnés newsletter.</li><li>Règle de décision : on garde une piste si elle dépasse 100 € cumulés ou montre une croissance hebdomadaire ; sinon on redéploie l'effort sur l'extension Chrome ou le simulateur bailleurs.</li><li>Rendement attendu à J90 : 0 à 300 € cumulés. C'est normal, l'objectif du trimestre est la validation, pas le revenu.</li></ul></div></div>
+  </div>
+</section>
+
+<section id="legal" class="legal">
+  <div class="section-head"><span class="eyebrow">08</span><h2>Cadre légal et encaissement en France</h2></div>
+  <div class="tablewrap">
+  <table>
+    <tbody>
+      <tr><td>Statut</td><td>Micro-entreprise, gratuite, déclaration en ligne. Obligatoire dès le premier euro de revenu régulier : les plateformes (YouTube, Etsy, Ko-fi, Lemon Squeezy) transmettent tes revenus au fisc via DAC7.</td></tr>
+      <tr><td>Catégorie</td><td>Pub, affiliation, sponsoring : BIC prestations de services, cotisations 21,2 %. Vente de logiciel ou conseil : BNC, 25,6 % ou 26,1 % selon les sources, à vérifier sur le site URSSAF. ACRE : réduction de 25 % la première année pour les périodes à compter du 1er juillet 2026.</td></tr>
+      <tr><td>Plafonds 2026</td><td>Services : 83 600 € de CA. Franchise de TVA services : 37 500 €, seuil majoré 41 250 €. Le seuil unique à 25 000 € a été abandonné en novembre 2025.</td></tr>
+      <tr><td>Impôt</td><td>Abattement forfaitaire 50 % (BIC services) ou 34 % (BNC), ou versement libératoire 1,7 % / 2,2 % sous condition de revenu.</td></tr>
+      <tr><td>Encaissement</td><td>Lemon Squeezy ou Paddle en « merchant of record » (5 % + 0,50 $) : ils collectent la TVA mondiale, indispensable dès que tu vends du numérique à des particuliers hors France. Stripe direct (1,5 % + 0,25 € en UE) si clientèle française et B2B.</td></tr>
+      <tr><td>Site</td><td>Mentions légales avec SIRET et mention « EI », CGV si vente B2C, politique de confidentialité, bannière cookies uniquement si traceurs publicitaires. Liens affiliés signalés clairement.</td></tr>
+      <tr><td>Contenu IA</td><td>AI Act article 50 applicable depuis le 2 août 2026 : étiquetage des contenus générés destinés au public. Divulgation exigée par YouTube, Etsy, KDP, Steam. Sur un site d'outils, une mention dans les mentions légales suffit.</td></tr>
+      <tr><td>Sans agrément</td><td>Interdits : intermédiation assurance ou crédit (ORIAS), conseil juridique individualisé, contenu crypto sans prestataire agréé. Mes outils s'arrêtent à l'information générale et aux modèles de documents.</td></tr>
+      <tr><td>Formulaire 3916</td><td>À déclarer pour tout compte de plateforme étrangère détenant des fonds (Gumroad, Etsy, Payhip).</td></tr>
+    </tbody>
+  </table>
+  </div>
+</section>
+
+<section id="sources" class="sources">
+  <div class="section-head"><span class="eyebrow">09</span><h2>Sources principales et réserves</h2></div>
+  <div class="callout bad">
+    <p><b>Réserves.</b> Les fourchettes de revenu sont des estimations construites à partir de médianes publiées, avec un biais de survivant fort : les fondateurs qui publient leurs chiffres sont ceux qui ont réussi. Aucune donnée de revenu de solo-founder français n'a été trouvée. Les taux de cotisation BNC 2026 divergent entre sources. Les montants d'affiliation sont « rapportés », non contractuels. Plusieurs blogs cités vendent des outils ou formations aux personnes qu'ils conseillent.</p>
+  </div>
+  <ol>
+    <li><a href="https://www.beehiiv.com/blog/the-state-of-paid-newsletters-2026">beehiiv, State of Paid Newsletters 2026</a> : conversion, prix, délai au premier euro.</li>
+    <li><a href="https://air.io/en/monetization/youtube-monetization-policy-changes-2026-a-complete-dated-timeline">AIR Media-Tech, chronologie des règles YouTube 2026</a>.</li>
+    <li><a href="https://www.bottlerocketcontent.com/youtube-ai-slop-crackdown-faceless-creators-2026/">Bottle Rocket, suppression des chaînes IA en janvier 2026</a>.</li>
+    <li><a href="https://www.searchenginejournal.com/impact-of-ai-overviews-how-publishers-need-to-adapt/556843/">Search Engine Journal, impact des AI Overviews sur les éditeurs</a>.</li>
+    <li><a href="https://www.orrick.com/en/Insights/2026/08/EU-AI-Act-Transparency-Obligations-for-AI-Generated-Content-Article-50">Orrick, AI Act article 50</a>.</li>
+    <li><a href="https://quasa.io/media/tiktok-creator-rewards-program-2026-strict-requirements-and-falling-rpm-explained">Quasa, TikTok Creator Rewards 2026</a>.</li>
+    <li><a href="https://developers.tiktok.com/docs/en/content-posting-api-reference-direct-post">TikTok, Content Posting API</a> : publication privée sans audit.</li>
+    <li><a href="https://app.cinevva.com/guides/web-game-monetization">Cinevva, monétisation des jeux web</a>.</li>
+    <li><a href="https://playgama.com/blog/business-faqs/poki-vs-crazygames-vs-gamedistribution-revenue-share/">Playgama, partages Poki, CrazyGames, GameDistribution</a>.</li>
+    <li><a href="https://medium.com/@playrea/from-hobby-to-67-million-gameplays-on-poki-in-2025-df2c147cfb27">Artem Lanin, 67 M de parties sur Poki en 2025</a>.</li>
+    <li><a href="https://gamerant.com/steam-indie-games-ai-generated-content-discoverability/">Game Rant via Gamalytic, médiane Steam 2026</a>.</li>
+    <li><a href="https://adapty.io/blog/how-much-money-do-apps-make/">Adapty, revenus des apps mobiles</a>.</li>
+    <li><a href="https://news.seonib.com/articles/2026-07-13/etsy-seller-rules-2026-policy-updates-fees-and-ai-guidelines.html">SEONIB, règles Etsy 2026</a>.</li>
+    <li><a href="https://www.indiehackers.com/product/easy-folders/6-months-post-launch-my-chrome-extension-has-hit-3-700-in-mrr-and-42-000-in-total-revenue--O3qs28VAnAkcJw0j--M">Indie Hackers, Easy Folders à 3 700 $ MRR</a>.</li>
+    <li><a href="https://extensionpay.com/articles/browser-extensions-make-money">ExtensionPay, extensions rentables</a>.</li>
+    <li><a href="https://chromegoldmine.com/blog/chrome-extension-monetization/chrome-extension-revenue-benchmarks/">Chrome Goldmine, benchmarks de revenu</a>.</li>
+    <li><a href="https://blog.acquire.com/acquire-com-biannual-acquisition-multiples-report-jan-2026/">Acquire.com, multiples de cession janvier 2026</a>.</li>
+    <li><a href="https://www.microgaps.com/blog/saas-niches-nobody-talking-about-2026">MicroGaps, niches verticales 2026</a>.</li>
+    <li><a href="https://lishchuk.com/blog/solo-founder-marketing-playbook-2026.html">Lishchuk, canaux d'acquisition solo 2026</a>.</li>
+    <li><a href="https://www.urssaf.fr/accueil/actualites/facturation-electronique.html">URSSAF, facturation électronique</a>.</li>
+    <li><a href="https://www.economie.gouv.fr/tout-savoir-sur-la-facturation-electronique-pour-les-entreprises">economie.gouv.fr, calendrier de la réforme</a>.</li>
+    <li><a href="https://www.siteartisan.fr/blog/impayes-comment-relancer-un-client-et-se-faire-payer-en-2026">Siteartisan, impayés des petites entreprises</a>.</li>
+    <li><a href="https://www.data.gouv.fr/reuses/observatoire-2026-la-presence-en-ligne-des-tpe-pme-francaises">Observatoire 2026 de la présence en ligne des TPE-PME</a>.</li>
+    <li><a href="https://www.defenseurdesdroits.fr/les-demarches-administratives-une-epreuve-pour-6-usagers-sur-10-955">Défenseur des droits, démarches administratives 2025</a>.</li>
+    <li><a href="https://www.ublo.immo/blog/dpe-2026-nouvelles-regles-calendrier-dinterdiction-et-impact-pour-les-bailleurs">Ublo, DPE 2026 et bailleurs</a>.</li>
+    <li><a href="https://greatpartners.net/fr/blog/finance-affiliate-programmes-eu/">Great Partners, programmes d'affiliation finance en France</a>.</li>
+    <li><a href="https://www.astrolabe-conseil.fr/micro-entreprise-taux-2026/">Astrolabe Conseil, taux micro-entreprise 2026</a>.</li>
+    <li><a href="https://comptabook.fr/tva/seuil-franchise-tva-2026/">Comptabook, franchise de TVA 2026</a>.</li>
+    <li><a href="https://www.indy.fr/guide/comptabilite-en-ligne/commerce/stripe-comptabilite/frais-stripe/">Indy, frais Stripe en France</a>.</li>
+    <li><a href="https://stories.byburk.net/gumroad-vs-payhip-vs-lemon-squeezy-2026-c54e0bc157e9">Burk, Gumroad vs Payhip vs Lemon Squeezy 2026</a>.</li>
+    <li><a href="https://www.anthropic.com/research/project-vend-2">Anthropic, Project Vend phase 2</a>.</li>
+  </ol>
+</section>
+
+</main>
+</div>
+
+<footer>Radar Business Autonome · Étude réalisée le 17 septembre 2026 · Les fourchettes sont des estimations, pas des promesses.</footer>
+</div>

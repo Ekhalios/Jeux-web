@@ -1,6 +1,10 @@
 /**
- * Génère les icônes 512×512 et les couvertures 1920×1080 de chaque jeu dans `kit/icons/`,
- * à partir d'emblèmes SVG dessinés ici (aucun asset externe). Usage : `npm run icons`.
+ * Génère les visuels de chaque jeu dans `kit/icons/` à partir d'emblèmes SVG dessinés ici (aucun asset externe) :
+ *   <jeu>-512.png                 icône carrée 512×512
+ *   <jeu>-cover-1920x1080.png     cover paysage 16:9 (CrazyGames, Poki)
+ *   <jeu>-cover-800x1200.png      cover portrait 2:3 (CrazyGames)
+ *   <jeu>-cover-800x800.png       cover carrée 1:1 (CrazyGames)
+ * Usage : `npm run icons`.
  */
 import { mkdirSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
@@ -51,20 +55,46 @@ const EMBLEMS = {
     <path d="M414 60 l-18 24 M436 74 l-26 14" stroke="#ffffff" stroke-width="10" stroke-linecap="round" opacity="0.9"/>`,
 };
 
+/** Cover : fond de la couleur du jeu, halo radial, motif discret, emblème centré à ~62 % du petit côté. */
+function coverSvg(game, emblem, w, h) {
+  const size = Math.round(Math.min(w, h) * 0.62);
+  const scale = size / 512;
+  const x = Math.round((w - size) / 2);
+  const y = Math.round((h - size) / 2);
+  const dots = [];
+  for (let i = 0; i < 40; i++) {
+    const dx = ((i * 197) % w) + 20;
+    const dy = ((i * 331) % h) + 10;
+    const r = 6 + ((i * 7) % 18);
+    dots.push(`<circle cx="${dx}" cy="${dy}" r="${r}" fill="${game.accent}" opacity="${0.04 + ((i % 4) * 0.02).toFixed(2)}"/>`);
+  }
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}" viewBox="0 0 ${w} ${h}">
+    <defs>
+      <radialGradient id="g" cx="0.5" cy="0.45" r="0.75"><stop offset="0" stop-color="#ffffff" stop-opacity="0.14"/><stop offset="1" stop-color="#000000" stop-opacity="0.30"/></radialGradient>
+      <filter id="s" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="${Math.round(size * 0.05)}"/></filter>
+    </defs>
+    <rect width="${w}" height="${h}" fill="${game.background}"/>
+    <rect width="${w}" height="${h}" fill="url(#g)"/>
+    ${dots.join('')}
+    <rect x="${x}" y="${y + Math.round(size * 0.06)}" width="${size}" height="${size}" rx="${Math.round(96 * scale)}" fill="#000000" opacity="0.45" filter="url(#s)"/>
+    <g transform="translate(${x} ${y}) scale(${scale})">${emblem}</g>
+  </svg>`;
+}
+
+const COVER_SIZES = [
+  [1920, 1080],
+  [800, 1200],
+  [800, 800],
+];
+
 for (const game of GAMES) {
   const emblem = EMBLEMS[game.id](game.background);
   const iconSvg = `<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512">${emblem}</svg>`;
-  const icon = join(out, `${game.id}-512.png`);
-  await sharp(Buffer.from(iconSvg)).png().toFile(icon);
-
-  const coverSvg = `<svg xmlns="http://www.w3.org/2000/svg" width="1920" height="1080" viewBox="0 0 1920 1080">
-    <rect width="1920" height="1080" fill="${game.background}"/>
-    <rect width="1920" height="1080" fill="url(#g)"/>
-    <defs><radialGradient id="g" cx="0.5" cy="0.45" r="0.7"><stop offset="0" stop-color="#ffffff" stop-opacity="0.10"/><stop offset="1" stop-color="#000000" stop-opacity="0.25"/></radialGradient></defs>
-    <g transform="translate(704 284) scale(1)">${emblem}</g>
-  </svg>`;
-  const cover = join(out, `${game.id}-cover-1920x1080.png`);
-  await sharp(Buffer.from(coverSvg)).png().toFile(cover);
+  await sharp(Buffer.from(iconSvg)).png().toFile(join(out, `${game.id}-512.png`));
   writeFileSync(join(out, `${game.id}.svg`), iconSvg);
-  console.log(`${game.id} : ${icon}, ${cover}`);
+  for (const [w, h] of COVER_SIZES) {
+    const file = join(out, `${game.id}-cover-${w}x${h}.png`);
+    await sharp(Buffer.from(coverSvg(game, emblem, w, h))).resize(w, h).png().toFile(file);
+  }
+  console.log(`${game.id} : icône 512 + covers ${COVER_SIZES.map(([w, h]) => `${w}x${h}`).join(', ')}`);
 }

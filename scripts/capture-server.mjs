@@ -25,6 +25,7 @@ createServer((req, res) => {
       const safe = normalize(name).replace(/^(\.\.[/\\])+/, '');
       const target = join(outRoot, safe);
       if (!target.startsWith(outRoot)) throw new Error('chemin refusé');
+      // dataUrl : "data:<type>;base64,..." (images PNG ou vidéos WebM enregistrées par MediaRecorder).
       const base64 = String(dataUrl).split(',')[1] ?? '';
       mkdirSync(dirname(target), { recursive: true });
       writeFileSync(target, Buffer.from(base64, 'base64'));

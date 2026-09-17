@@ -6,8 +6,9 @@ Tout ce qu'il faut pour envoyer les trois jeux à CrazyGames et Poki. Compte 15 
 
 | Dossier | Contenu |
 |---|---|
-| `dist/` | Six zips prêts à envoyer : `<jeu>-crazygames.zip` et `<jeu>-poki.zip`. Chaque zip contient le SDK du bon portail, `index.html` à la racine. Régénérer avec `npm run pack`. |
-| `icons/` | Icône 512×512 (`<jeu>-512.png`) et couverture 1920×1080 (`<jeu>-cover-1920x1080.png`) par jeu. Régénérer avec `npm run icons`. |
+| `dist/` | Six zips : `<jeu>-crazygames.zip` et `<jeu>-poki.zip`, SDK du bon portail inclus, `index.html` à la racine. Régénérer avec `npm run pack`. **CrazyGames refuse les archives** : glisser à la place le contenu du dossier `games/<jeu>/dist-crazygames/` (`index.html` + `assets/`), créé par la même commande. |
+| `icons/` | Icône 512×512 (`<jeu>-512.png`) et covers aux trois formats exigés par CrazyGames : `<jeu>-cover-1920x1080.png`, `<jeu>-cover-800x1200.png`, `<jeu>-cover-800x800.png`. Régénérer avec `npm run icons`. |
+| `videos/` | Vidéos de présentation : `<jeu>-portrait-1080x1920.mp4` et `<jeu>-landscape-1920x1080.mp4` (15 à 30 s, sans son). Enregistrements bruts dans `videos/raw/`. `node scripts/make-videos.mjs` les découpe et les met au format si besoin. |
 | `screenshots/<jeu>/` | Trois captures portrait 720×1280 (titre, partie, moment fort). `wide/` : les mêmes composées en 1920×1080 pour les formulaires qui exigent du 16:9. |
 | `submissions/<jeu>.md` | Textes prêts à copier : titre, descriptions courte et longue, genre, tags, contrôles, notes de monétisation. |
 | `checklist-test.md` | La checklist de test manuelle, remplie le 17 septembre 2026. |
@@ -16,9 +17,10 @@ Tout ce qu'il faut pour envoyer les trois jeux à CrazyGames et Poki. Compte 15 
 
 1. Se connecter sur [developer.crazygames.com](https://developer.crazygames.com/) → « Submit a game ».
 2. Renseigner le formulaire avec `submissions/<jeu>.md` : titre, description courte, description, genre, tags, entrées (Mouse, Touch ; plus Keyboard pour Tap Tower et Merge Drop), singleplayer.
-3. Téléverser `dist/<jeu>-crazygames.zip` en « HTML5 game », `icons/<jeu>-512.png` en cover, et au moins trois captures depuis `screenshots/<jeu>/wide/`.
-4. Cocher que le jeu utilise le CrazyGames SDK (pubs midgame et rewarded, événements gameplayStart/Stop).
-5. Envoyer. Délai de revue annoncé : quelques jours. Ils répondent par email, souvent avec des demandes de correction : me transmettre le message tel quel.
+3. Upload files : glisser `index.html` et le dossier `assets` depuis `games/<jeu>/dist-crazygames/` (pas le zip). Progress save : « Yes, using LocalStorage ». Mobile : coché, orientation Portrait. Muting audio through SDK : décoché pour l'instant.
+4. Covers : les trois fichiers `icons/<jeu>-cover-*.png`. Vidéos : `videos/<jeu>-landscape-1920x1080.mp4` et `videos/<jeu>-portrait-1080x1920.mp4`. Captures : `screenshots/<jeu>/wide/`.
+5. Basic Launch requirements : Yes partout, N/A pour la mention de conditions générales (aucune donnée personnelle collectée).
+6. Envoyer. Délai de revue annoncé : quelques jours. Ils répondent par email, souvent avec des demandes de correction : me transmettre le message tel quel.
 
 ## Poki, dans l'ordre
 

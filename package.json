@@ -14,7 +14,7 @@
     "dev": "npm run dev --workspace=games/blocky-fit",
     "build": "npm run build --workspaces --if-present",
     "test": "vitest run",
-    "typecheck": "tsc -b",
+    "typecheck": "npm run typecheck --workspaces --if-present",
     "site": "node scripts/assemble-site.mjs",
     "pack": "node scripts/pack-portals.mjs",
     "icons": "node scripts/make-icons.mjs"

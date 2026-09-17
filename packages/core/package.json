@@ -12,5 +12,9 @@
   },
   "peerDependencies": {
     "phaser": "^3.90.0"
+  },
+  "scripts": {
+    "typecheck": "tsc -p .",
+    "test": "vitest run src"
   }
 }

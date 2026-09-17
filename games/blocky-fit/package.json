@@ -1,0 +1,19 @@
+{
+  "name": "@webetnes/blocky-fit",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Blocky Fit : puzzle de placement de pièces sur une grille 8x8",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "build:poki": "vite build --mode poki --outDir dist-poki",
+    "build:crazygames": "vite build --mode crazygames --outDir dist-crazygames",
+    "typecheck": "tsc -p .",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@webetnes/core": "*",
+    "phaser": "3.90.0"
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "name": "webetnes-jeux-web",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Jeux HTML5 casual du studio Webetnes pour Poki et CrazyGames",
+  "author": "Ekhalios",
+  "license": "UNLICENSED",
+  "type": "module",
+  "workspaces": [
+    "packages/*",
+    "games/*"
+  ],
+  "scripts": {
+    "dev": "npm run dev --workspace=games/blocky-fit",
+    "build": "npm run build --workspaces --if-present",
+    "test": "vitest run",
+    "typecheck": "tsc -b",
+    "site": "node scripts/assemble-site.mjs",
+    "pack": "node scripts/pack-portals.mjs",
+    "icons": "node scripts/make-icons.mjs"
+  },
+  "devDependencies": {
+    "phaser": "^3.90.0",
+    "sharp": "^0.35.4",
+    "typescript": "^5.9.3",
+    "vite": "^8.3.0",
+    "vitest": "^5.0.1"
+  }
+}

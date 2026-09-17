@@ -1,0 +1,16 @@
+{
+  "name": "@webetnes/core",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Socle partagé des jeux Webetnes : SDK portails, audio, stockage, UI Phaser",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "exports": {
+    ".": "./src/index.ts",
+    "./vite-portal-plugin": "./vite-portal-plugin.mjs"
+  },
+  "peerDependencies": {
+    "phaser": "^3.90.0"
+  }
+}

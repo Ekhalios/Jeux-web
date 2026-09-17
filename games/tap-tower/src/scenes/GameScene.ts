@@ -13,6 +13,7 @@ import { colorForLevel, lerpColor } from '../logic/hue';
 import { scoreForLanding, widthAfterPerfect } from '../logic/score';
 import { speedForLevel } from '../logic/speed';
 import { computeLanding, type Cut } from '../logic/stack';
+import { blockTopForLevel, movingDirectionForLevel, movingStartX } from '../logic/tower';
 import { BACKGROUND_DARKEN_LEVELS, BACKGROUND_DARKEST } from '../theme';
 import type { GameOverData } from './GameOverScene';
 
@@ -32,8 +33,10 @@ const GLYPH_SOUND_OFF = '✕';
 
 export class GameScene extends Phaser.Scene {
   private blocks: Block[] = [];
+  /** Nombre de blocs posés depuis le début (base incluse). Indépendant de `blocks`, qui est élagué. */
+  private levelCount = 0;
   private moving: Block | null = null;
-  private movingDir = 1;
+  private movingDir: 1 | -1 = 1;
   private speed = 0;
   private score = 0;
   private best = 0;
@@ -61,6 +64,7 @@ export class GameScene extends Phaser.Scene {
 
     this.drawBackground();
     this.blocks.push(this.createBlock((GAME_WIDTH - BASE_WIDTH) / 2, BASE_WIDTH, BASE_TOP_Y, 0));
+    this.levelCount = 1;
     this.buildHud();
     this.bindInput();
 
@@ -101,7 +105,7 @@ export class GameScene extends Phaser.Scene {
     const width = Math.max(top.width, CONTINUE_MIN_WIDTH);
     if (width > top.width) {
       const x = Phaser.Math.Clamp(top.x - (width - top.width) / 2, SIDE_MARGIN, GAME_WIDTH - SIDE_MARGIN - width);
-      const level = this.blocks.length - 1;
+      const level = this.levelCount - 1;
       top.rect.destroy();
       const widened = this.createBlock(x, width, top.top, level);
       widened.rect.setScale(top.width / width, 1);
@@ -140,7 +144,7 @@ export class GameScene extends Phaser.Scene {
       sfx.play(this.streak % COMBO_EVERY === 0 ? 'combo' : 'perfect');
     } else {
       this.streak = 0;
-      this.spawnDebris(landing.cut, m.top, this.blocks.length);
+      this.spawnDebris(landing.cut, m.top, this.levelCount);
       sfx.play('place');
     }
 
@@ -148,8 +152,9 @@ export class GameScene extends Phaser.Scene {
     this.score += gained;
 
     m.rect.destroy();
-    const placed = this.createBlock(x, width, m.top, this.blocks.length);
+    const placed = this.createBlock(x, width, m.top, this.levelCount);
     this.blocks.push(placed);
+    this.levelCount += 1;
     placed.rect.setScale(1, 0.78);
     this.tweens.add({ targets: placed.rect, scaleY: 1, duration: 140, ease: 'Back.easeOut' });
 
@@ -164,11 +169,11 @@ export class GameScene extends Phaser.Scene {
 
   private spawnMoving(): void {
     const top = this.topBlock();
-    const level = this.blocks.length;
+    const level = this.levelCount;
     const width = top.width;
-    this.movingDir = level % 2 === 1 ? 1 : -1;
-    const x = this.movingDir === 1 ? SIDE_MARGIN : GAME_WIDTH - SIDE_MARGIN - width;
-    this.moving = this.createBlock(x, width, BASE_TOP_Y - level * BLOCK_HEIGHT, level);
+    this.movingDir = movingDirectionForLevel(level);
+    const x = movingStartX(this.movingDir, width, GAME_WIDTH, SIDE_MARGIN);
+    this.moving = this.createBlock(x, width, blockTopForLevel(level, BASE_TOP_Y, BLOCK_HEIGHT), level);
     this.speed = speedForLevel(level - 1);
   }
 
@@ -278,7 +283,7 @@ export class GameScene extends Phaser.Scene {
     if (targetScroll !== cam.scrollY) {
       this.tweens.add({ targets: cam, scrollY: targetScroll, duration: 240, ease: 'Sine.easeOut' });
     }
-    const level = this.blocks.length - 1;
+    const level = this.levelCount - 1;
     cam.setBackgroundColor(lerpColor(ctx(this).theme.background, BACKGROUND_DARKEST, level / BACKGROUND_DARKEN_LEVELS));
   }
 

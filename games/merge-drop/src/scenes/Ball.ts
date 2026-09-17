@@ -24,6 +24,15 @@ export class Ball extends Phaser.Physics.Matter.Image {
   get speed(): number {
     return (this.body as MatterJS.BodyType).speed;
   }
+
+  /**
+   * Phaser ne tue pas les tweens d'un objet détruit. Un tween d'échelle (popIn) encore actif
+   * après la fusion tenterait de mettre à l'échelle un corps Matter disparu et ferait planter le jeu.
+   */
+  override destroy(fromScene?: boolean): void {
+    this.scene?.tweens.killTweensOf(this);
+    super.destroy(fromScene);
+  }
 }
 
 export function isBall(body: MatterJS.BodyType): body is MatterJS.BodyType & { gameObject: Ball } {

@@ -94,5 +94,10 @@ export async function bootstrap(options: BootstrapOptions): Promise<Phaser.Game>
     },
   });
 
+  // Builds sans portail (GitHub Pages, développement) : expose le jeu pour les tests automatisés.
+  if (context.sdk.portal === 'none') {
+    (window as Window & { __webetnes?: unknown }).__webetnes = { game, context };
+  }
+
   return game;
 }

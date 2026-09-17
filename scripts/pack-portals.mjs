@@ -17,6 +17,16 @@ const games = GAMES.filter((g) => !onlyGame || g.id === onlyGame);
 const outDir = join(root, 'kit', 'dist');
 mkdirSync(outDir, { recursive: true });
 
+/** Zippe le contenu d'un dossier (index.html à la racine du zip). PowerShell sous Windows, `zip` ailleurs. */
+function zipFolder(dir, zip) {
+  if (process.platform === 'win32') {
+    const cmd = `Compress-Archive -Path '${dir}\\*' -DestinationPath '${zip}' -Force`;
+    execSync(`powershell -NoProfile -Command "${cmd}"`, { stdio: 'inherit' });
+  } else {
+    execSync(`zip -qr "${zip}" .`, { cwd: dir, stdio: 'inherit' });
+  }
+}
+
 function folderSize(dir) {
   let total = 0;
   for (const entry of readdirSync(dir, { withFileTypes: true })) {
@@ -33,8 +43,7 @@ for (const game of games) {
     execSync(`npm run build:${portal} -w games/${game.id}`, { cwd: root, stdio: 'inherit' });
     const zip = join(outDir, `${game.id}-${portal}.zip`);
     rmSync(zip, { force: true });
-    // bsdtar (Windows 10+, macOS) choisit le format zip d'après l'extension.
-    execSync(`tar -a -c -f "${zip}" -C "${dist}" .`, { stdio: 'inherit' });
+    zipFolder(dist, zip);
     const mb = (folderSize(dist) / 1024 / 1024).toFixed(2);
     console.log(`${game.id} / ${portal} : ${mb} Mo décompressés → ${zip}`);
     if (!existsSync(zip)) process.exit(1);

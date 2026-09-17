@@ -281,6 +281,9 @@ export class GameScene extends Phaser.Scene {
     const cam = this.cameras.main;
     const targetScroll = Math.min(0, top.top - TOP_TARGET_Y);
     if (targetScroll !== cam.scrollY) {
+      // Un joueur rapide pose un bloc toutes les 300 ms : sans cela, les tweens se cumulent,
+      // se disputent scrollY et la caméra prend un retard croissant sur la tour.
+      this.tweens.killTweensOf(cam);
       this.tweens.add({ targets: cam, scrollY: targetScroll, duration: 240, ease: 'Sine.easeOut' });
     }
     const level = this.levelCount - 1;

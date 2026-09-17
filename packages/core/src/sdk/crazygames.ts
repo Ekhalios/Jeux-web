@@ -49,11 +49,13 @@ export class CrazyGamesAdapter implements PortalSDK {
     try {
       await sdk.init();
       if (sdk.environment === 'disabled') {
+        console.warn('[Webetnes] SDK CrazyGames désactivé dans cet environnement : pubs simulées.');
         this.sdk = null;
         return;
       }
       this.sdk = sdk;
-    } catch {
+    } catch (error) {
+      console.warn('[Webetnes] Initialisation du SDK CrazyGames impossible, pubs simulées :', error);
       this.sdk = null;
     }
   }
@@ -97,7 +99,9 @@ export class CrazyGamesAdapter implements PortalSDK {
           if (started) this.hooks.onAdEnd();
           resolve(true);
         },
-        adError: () => {
+        adError: (error) => {
+          // Codes documentés : unfilled, adblock, adCooldown (3 min entre deux pubs), adsDisabledBasicLaunch, other.
+          console.warn(`[Webetnes] Pub ${type} non affichée :`, error);
           if (started) this.hooks.onAdEnd();
           // Pas de pub disponible : on ne pénalise pas le joueur sur une midgame,
           // mais une récompense sans pub n'est accordée que si la pub n'a pas commencé.

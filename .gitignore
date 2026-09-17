@@ -7,3 +7,4 @@ kit/dist/
 Thumbs.db
 .vite/
 coverage/
+.claude/

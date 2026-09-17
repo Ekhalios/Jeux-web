@@ -11,7 +11,7 @@ export const MAX_LEVEL = 11;
 /** Score bonus quand deux boules de niveau maximal fusionnent et disparaissent. */
 export const MAX_MERGE_BONUS = 100;
 
-/** Table des 11 niveaux, indexée par `level - 1`. Le niveau 11 (diamètre 388) tient dans le bac de 620. */
+/** Table des 11 niveaux, indexée par `level - 1`. Le niveau 11 (diamètre 388) tient dans le bac de 560. */
 export const LEVELS: readonly Level[] = [
   { level: 1, radius: 24, score: 1, color: 0xff5d73 },
   { level: 2, radius: 32, score: 3, color: 0xff8f3f },

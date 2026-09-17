@@ -39,12 +39,40 @@ describe('isNearDanger', () => {
 });
 
 describe('accumulateDanger', () => {
-  it('cumule le temps en danger et repart de zéro sinon', () => {
+  it('cumule le temps en danger', () => {
     let t = 0;
     t = accumulateDanger(t, true, 500);
     t = accumulateDanger(t, true, 700);
     expect(t).toBe(1200);
+  });
+
+  it('décroît hors danger au lieu de repartir de zéro : un bac plein qui tremble ne remet pas le compteur à zéro', () => {
+    let t = 1200;
     t = accumulateDanger(t, false, 16);
-    expect(t).toBe(0);
+    expect(t).toBeGreaterThan(1000);
+    expect(t).toBeLessThan(1200);
+  });
+
+  it('ne descend jamais sous zéro', () => {
+    expect(accumulateDanger(10, false, 5000)).toBe(0);
+  });
+
+  it('une alternance danger / répit garde une tendance à la hausse', () => {
+    let t = 0;
+    for (let i = 0; i < 100; i++) {
+      t = accumulateDanger(t, true, 16);
+      t = accumulateDanger(t, i % 3 === 0, 16);
+    }
+    expect(t).toBeGreaterThan(1500);
+  });
+});
+
+describe('seuil de vitesse par défaut', () => {
+  it('considère immobile une boule qui tremble de quelques pixels par pas', () => {
+    expect(isInDanger([{ y: 300, radius: 30, speed: 2.5 }], LINE)).toBe(true);
+  });
+
+  it('ignore toujours une boule en chute', () => {
+    expect(isInDanger([{ y: 300, radius: 30, speed: 8 }], LINE)).toBe(false);
   });
 });

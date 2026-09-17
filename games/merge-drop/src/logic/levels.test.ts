@@ -11,7 +11,7 @@ describe('levels', () => {
     for (let i = 1; i < LEVELS.length; i++) {
       expect(LEVELS[i]!.radius).toBeGreaterThan(LEVELS[i - 1]!.radius);
     }
-    expect(LEVELS[MAX_LEVEL - 1]!.radius * 2).toBeLessThan(620);
+    expect(LEVELS[MAX_LEVEL - 1]!.radius * 2).toBeLessThan(560);
   });
 
   it('a des scores strictement croissants et des couleurs distinctes', () => {

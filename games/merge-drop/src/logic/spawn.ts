@@ -6,8 +6,11 @@ export interface RandomSource {
 export const SPAWN_MIN_LEVEL = 1;
 export const SPAWN_MAX_LEVEL = 5;
 
-/** Poids de tirage des niveaux 1 à 5 : les petites boules sont les plus fréquentes. */
-export const SPAWN_WEIGHTS: readonly number[] = [34, 28, 20, 12, 6];
+/**
+ * Poids de tirage des niveaux 1 à 5. Distribution volontairement assez plate :
+ * trop de petites boules fusionnent vite et n'occupent pas de place, la partie ne finit jamais.
+ */
+export const SPAWN_WEIGHTS: readonly number[] = [26, 24, 20, 17, 13];
 
 /** Tire le niveau de la prochaine boule, toujours entre 1 et 5. */
 export function nextLevel(rng: RandomSource): number {
